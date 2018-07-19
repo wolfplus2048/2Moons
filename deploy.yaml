@@ -1,0 +1,114 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    qcloud-app: moon
+  name: moon
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      qcloud-app: moon
+  template:
+    metadata:
+      labels:
+        qcloud-app: moon
+    spec:
+      containers:
+      - env:
+        - name: PATH
+          value: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+        - name: TERM
+          value: xterm
+        - name: LANG
+          value: C.UTF-8
+        - name: LC_ALL
+          value: C.UTF-8
+        - name: DOCKER_CONF_HOME
+          value: /opt/docker/
+        - name: LOG_STDOUT
+        - name: LOG_STDERR
+        - name: APPLICATION_USER
+          value: application
+        - name: APPLICATION_GROUP
+          value: application
+        - name: APPLICATION_PATH
+          value: /app
+        - name: APPLICATION_UID
+          value: "1000"
+        - name: APPLICATION_GID
+          value: "1000"
+        - name: WEB_DOCUMENT_ROOT
+          value: /app
+        - name: WEB_DOCUMENT_INDEX
+          value: index.php
+        - name: WEB_ALIAS_DOMAIN
+          value: '*.vm'
+        - name: WEB_PHP_TIMEOUT
+          value: "600"
+        - name: WEB_PHP_SOCKET
+          value: 127.0.0.1:9000
+        - name: WEB_NO_CACHE_PATTERN
+          value: \.(css|js|gif|png|jpg|svg|json|xml)$
+        - name: DB_HOST
+          value: mariadb
+        - name: DB_USER
+          value: 2moons
+        - name: DB_PASSWORD
+          value: 2moons
+        - name: DB_NAME
+          value: 2moons
+        - name: ADMIN_NAME
+          value: admin
+        - name: ADMIN_PASSWORD
+          value: admin
+        - name: ADMIN_MAIL
+          value: kaiqiu@tencent.com
+        image: hub.tencentyun.com/demo/game:latest
+        imagePullPolicy: Always
+        name: moon
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2Gi
+          requests:
+            cpu: "1"
+            memory: 1Gi
+      imagePullSecrets:
+      - name: qcloudregistrykey
+      - name: tencenthubkey
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    qcloud-app: moon
+  name: moon
+  namespace: default
+spec:
+  ports:
+  - name: tcp-80-80
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    qcloud-app: moon
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: game
+  namespace: default
+spec:
+  rules:
+  - host: game.tdemo.net
+    http:
+      paths:
+      - backend:
+          serviceName: moon
+          servicePort: 80
+        path: /
