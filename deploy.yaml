@@ -30,7 +30,7 @@ spec:
         - name: ADMIN_PASSWORD
           value: admin
         - name: ADMIN_MAIL
-          value: kaiqiu@tencent.com
+          value: admin@tdemo.net
         image: hub.tencentyun.com/demo/game@$IMAGE_DIGEST
         imagePullPolicy: Always
         name: moon
