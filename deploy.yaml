@@ -53,6 +53,7 @@ metadata:
   name: moon
   namespace: default
 spec:
+  type: NodePort
   ports:
   - name: tcp-80-80
     port: 80
