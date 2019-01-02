@@ -31,7 +31,7 @@ spec:
           value: admin
         - name: ADMIN_MAIL
           value: admin@tdemo.net
-        image: hub.tencentyun.com/demo/game@$IMAGE_DIGEST
+        image: hub.tencentyun.com/wolfplus_deom/2moons@$IMAGE_DIGEST
         imagePullPolicy: Always
         name: moon
         resources:
